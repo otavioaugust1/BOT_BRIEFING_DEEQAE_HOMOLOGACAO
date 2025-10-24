@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito - BOT BRIEFING DEEQAE</title>
+    <link rel="stylesheet" href="static/css/login.css" />
+</head>
+
+<body>
+    <div class="login-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-card branco">
+                    <img src="static/img/logo.png" alt="Logo" class="logo" />
+                </div>
+            </div>
+        </header>
+        <h1>Acesso ao <br>Agora tem <span class="highlight">BRIEFING</span></h1>
+        <p>Apenas para apresentação de protótipo. Solicite acesso completo no e-mail:
+            <strong>cginfo.ate@saude.gov.br</strong>.</p>
+        <form id="loginForm" action="/login" method="POST">
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" name="username" value="COQAE" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" value="" required>
+            </div>
+            <button type="submit">Entrar no Protótipo</button>
+            <p id="errorMessage" class="error-message"></p>
+        </form>
+
+        <button type="button" class="forgot-btn" onclick="openForgotModal()">Esqueceu sua senha?</button>
+
+        <div id="forgotModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeForgotModal()">&times;</span>
+                <h2>Redefinir Acesso</h2>
+                <p>Se você for da equipe de homologação, digite seu e-mail abaixo. A equipe DEEQAE/COQAE entrará em
+                    contato em breve para liberar o acesso.</p>
+
+                <form id="forgotForm">
+                    <div class="input-group">
+                        <label for="forgotEmail">E-mail</label>
+                        <input type="email" id="forgotEmail" required>
+                    </div>
+                    <button type="button" onclick="submitForgotForm()">Solicitar Contato</button>
+                </form>
+
+                <p id="forgotMessage" style="color: green; margin-top: 10px; display: none; text-align: center;">
+                </p>
+            </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        <small style="color: #999;">Desenvolvido por Otavio Augusto. <strong>Versão 0.4</strong></small>
+    </div>
+    <script>
+        // Funções para o modal de esqueci a senha
+        function openForgotModal() {
+            document.getElementById('forgotModal').style.display = 'flex';
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotModal').style.display = 'none';
+        }
+
+        function submitForgotForm() {
+            const email = document.getElementById('forgotEmail').value;
+            if (email) {
+                document.getElementById('forgotMessage').textContent = 
+                    'Solicitação enviada! Entraremos em contato em breve.';
+                document.getElementById('forgotMessage').style.display = 'block';
+                
+                // Limpa o formulário após 3 segundos e fecha o modal
+                setTimeout(() => {
+                    document.getElementById('forgotEmail').value = '';
+                    document.getElementById('forgotMessage').style.display = 'none';
+                    closeForgotModal();
+                }, 3000);
+            }
+        }
+
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('forgotModal');
+            if (event.target === modal) {
+                closeForgotModal();
+            }
+        }
+    </script>
+</body>    
+</html>

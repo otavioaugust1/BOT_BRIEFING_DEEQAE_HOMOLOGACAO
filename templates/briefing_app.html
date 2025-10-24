@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agora Tem Especialistas</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+
+<body>
+<header class="header">
+    <div class="header-content">
+        <div class="header-info">
+            <div class="logo-card branco">
+                <img src="/static/img/logo.png" alt="Logo" class="logo" />
+            </div>
+            <h1>Agora tem <span class="highlight">BRIEFING</span></h1>
+        </div>
+        
+        
+    </div>
+</header>
+
+
+    <main class="form-container">
+        <div class="card azul">
+            <label for="regiao">REGIÃO:</label>
+            <select id="regiao" onchange="updateUF()">
+                <option value="">TODOS</option>
+                <option value="NORDESTE">NORDESTE</option>
+                <option value="NORTE">NORTE</option>
+                <option value="CENTRO-OESTE">CENTRO-OESTE</option>
+                <option value="SUDESTE">SUDESTE</option>
+                <option value="SUL">SUL</option>
+            </select>
+        </div>
+
+        <div class="card verde">
+            <label for="uf">UF:</label>
+            <select id="uf" onchange="updateMacro()">
+                <option value="">TODOS</option>
+            </select>
+        </div>
+
+        <div class="card amarelo">
+            <label for="macro">MACRORREGIÃO DE SAÚDE:</label>
+            <select id="macro" onchange="updateRegiaoSaude()">
+                <option value="">TODOS</option>
+            </select>
+        </div>
+
+        <div class="card vermelho">
+            <label for="regiaoSaude">REGIÃO DE SAÚDE:</label>
+            <select id="regiaoSaude" onchange="updateMunicipios()">
+                <option value="">TODOS</option>
+            </select>
+        </div>
+
+        <div class="card cinza">
+            <label for="municipio">MUNICÍPIO:</label>
+            <select id="municipio" onchange="updateUnidade()">
+                <option value="">TODOS</option>
+            </select>
+        </div>
+
+        <div class="card cinza">
+            <label for="unidade">UNIDADE-CNES:</label>
+            <select id="unidade">
+                <option value="">TODOS</option>
+            </select>
+        </div>
+
+        <div class="buttons">
+            <button class="completo-btn" onclick="startLoadingCompleto()">Gerar Briefing <span class="highlight">COMPLETO</span></button>
+            <button class="simplif-btn" onclick="startLoadingSimplificado()">Gerar Briefing <span class="highlight">SIMPLIFICADO</span></button>
+            <button class="clear-btn" onclick="clearForm()">Limpar</button>
+            <button class="logout-btn" onclick="logout()">Sair</button>
+        </div>
+
+        <div class="progress-container" id="progressSection" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div class="files-container" id="filesSection_c" style="display: none;"></div>
+
+        <div class="files-container" id="filesSection_s" style="display: none;"></div>
+    </main>
+
+  <footer class="footer">
+    <p>Desenvolvido com dedicação por Otavio Augusto (@otavioaugust)</p>
+    <p>SAES / DEEQAE / COQAE • Ministério da Saúde</p>
+  </footer>
+
+      <script src="/static/js/script.js"></script>
+</body>
+</html>

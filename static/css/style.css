@@ -1,0 +1,307 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header {
+  background-color: #0078D7;
+  color: white;
+  padding: 15px 20px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.logo-card.branco {
+  background-color: #ffffff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo {
+  max-height: 60px;
+  width: auto;
+}
+
+.header-info h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+  line-height: 1.2;
+  color: white;
+}
+
+.highlight {
+  color: #FFD700;
+  font-weight: bold;
+}
+
+/* Botão Sair ajustado */
+.logout-btn {
+  background-color: #f8f9fa;
+  color: #000000;
+  border: 1px solid #ced4da;
+}
+
+.logout-btn:hover {
+  background-color: #e2e6ea;
+  color: #343a40;
+}
+
+/* Responsivo para telas menores */
+@media (max-width: 600px) {
+  .header {
+    padding: 12px 15px;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .header-info {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .header-info h1 {
+    font-size: 1.2rem;
+    order: -1; /* Coloca o título acima do logo no mobile */
+  }
+  
+  .logo-card.branco {
+    order: 1;
+  }
+  
+  .logo {
+    max-height: 50px;
+  }
+  
+
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 400px) {
+  .header-info h1 {
+    font-size: 1.1rem;
+  }
+  
+  .logo {
+    max-height: 45px;
+  }
+}
+
+/* Mantenha o resto do seu CSS original abaixo */
+.form-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.card {
+  flex: 1 1 250px;
+  padding: 15px;
+  border-radius: 8px;
+  color: white;
+}
+
+.card label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+}
+
+.azul { background-color: #0078D7; }
+.verde { background-color: #28a745; }
+.amarelo { background-color: #ffc107; color: #333; }
+.vermelho { background-color: #dc3545; }
+.cinza { background-color: #6c757d; }
+.branco { background-color: #ffffff; }
+
+.buttons {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 20px;
+  margin: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+}
+
+.completo-btn{
+  background-color: #0078D7;
+}
+
+.simplif-btn{
+   background-color: #0078D7;
+}
+
+.clear-btn {
+  background-color: #6c757d;
+}
+
+.progress-container {
+  width: 80%;
+  margin: 30px auto;
+  display: none;
+}
+
+.progress-bar {
+  background-color: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 90%;
+  background-color: #28a745;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-weight: bold;
+  border-radius: 20px 0 0 20px;
+}
+
+.files-container {
+  width: 80%;
+  margin: 30px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.files-container h2 {
+  margin-bottom: 15px;
+}
+
+.files-container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.files-container li {
+  margin: 10px 0;
+}
+
+.files-container a {
+  text-decoration: none;
+  color: #0078D7;
+  font-weight: bold;
+}
+
+.footer {
+  background-color: #b30000;
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-top: 2px solid #800000;
+}
+.footer p {
+  margin: 4px 0;
+}
+.footer a {
+  color: #FFD700;
+  text-decoration: none;
+}
+
+/* Centraliza o container */
+.progress-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Estiliza a barra */
+.progress-bar {
+  width: 100%;
+  height: 30px;
+  background-color: #e0e0e0;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Estiliza o preenchimento */
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4caf50, #81c784);
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 10px;
+  text-align: center;
+  transition: width 0.1s linear;
+}
+
+/* Estiliza a saida */
+.file-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.files-container a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #0078D7;
+  font-weight: bold;
+  padding: 4px 0;
+}
+
+.files-container a:hover {
+  text-decoration: underline;
+}
+
+.files-container li {
+  margin: 12px 0;
+}
