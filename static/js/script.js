@@ -385,7 +385,7 @@ function animateProgressBar() {
   return new Promise((resolve) => {
     const fill = document.getElementById("progressFill");
     let progress = 0;
-    const duration = 15000; // 15 segundos EXATOS
+    const duration = 25000; // 15 segundos EXATOS
     const interval = 100;
     const step = 100 / (duration / interval);
 
