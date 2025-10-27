@@ -8,7 +8,7 @@ Este repositório contém scripts e códigos para o desenvolvimento de um sistem
 
 Embora o sistema seja restrito ao ambiente de desenvolvimento/coordenação, ele está hospedado para visualização/teste no seguinte endereço:
 
-**URL:** [https://bot-briefing-deeqae.onrender.com/](https://bot-briefing-deeqae.onrender.com/)
+**URL:** [https://bot-briefing-deeqae-homologacao.onrender.com/](https://bot-briefing-deeqae-homologacao.onrender.com/)
 
 ## 🎯 Objetivo do Projeto
 
