@@ -117,6 +117,7 @@ def extrair_codigo_uf(uf):
 
     return uf_sigla
 
+
 # --- FUNÇÕES EXTRAIR MUNICIPIO (IBGE - TEXTO) ---
 def extrair_codigo_macro(macro):
     """Extrai código IBGE do município"""

@@ -806,8 +806,8 @@ def gerar_tabela_sia_oci(
     (Nacional, UF, Município, etc.) e usando a formatação visual hierárquica com hífen (-).
     Agrupa por SUBGRUPO_PROCEDIMENTO similar à função de serviços.
     """
-    print("🔍 INICIANDO gerar_tabela_sia_oci...")
-    
+    print('🔍 INICIANDO gerar_tabela_sia_oci...')
+
     df = _carregar_base_sia_oci()
 
     if df is None or df.empty:
@@ -832,12 +832,12 @@ def gerar_tabela_sia_oci(
     mapa_selecao = mapear_selecao_geral(dados_selecao)
     nivel_selecionado = mapa_selecao.get('NIVEL_AGREGACAO', 'NACIONAL')
     filtros = mapa_selecao.get('FILTROS', {})
-    
-    print(f"🎯 Nível selecionado OCI: {nivel_selecionado}")
-    print(f"🎯 Filtros aplicados OCI: {filtros}")
+
+    print(f'🎯 Nível selecionado OCI: {nivel_selecionado}')
+    print(f'🎯 Filtros aplicados OCI: {filtros}')
 
     df_trabalho = df.copy()
-    print(f"📊 Registros antes do filtro OCI: {len(df_trabalho)}")
+    print(f'📊 Registros antes do filtro OCI: {len(df_trabalho)}')
 
     # 1. Aplicação dos Filtros (inclusão de lógica de filtro parcial)
     if filtros:
@@ -856,10 +856,10 @@ def gerar_tabela_sia_oci(
                     mascara &= df_trabalho[coluna] == valor_padronizado
 
         df_trabalho = df_trabalho[mascara].reset_index(drop=True)
-        print(f"📊 Após filtros OCI: {len(df_trabalho)} registros")
+        print(f'📊 Após filtros OCI: {len(df_trabalho)} registros')
 
     if df_trabalho.empty:
-        print("📊 Nenhum registro encontrado após filtros OCI")
+        print('📊 Nenhum registro encontrado após filtros OCI')
         return []
 
     tabelas = []
@@ -867,19 +867,28 @@ def gerar_tabela_sia_oci(
     # Agrupa o dataframe de trabalho por SUBGRUPO_PROCEDIMENTO para iterar
     df_grouped_subgrupo = df_trabalho.groupby(COL_SUBGRUPO, observed=True)
 
-    print(f"🎯 Subgrupos de procedimento encontrados após filtro: {df_trabalho[COL_SUBGRUPO].nunique()}")
+    print(
+        f'🎯 Subgrupos de procedimento encontrados após filtro: {df_trabalho[COL_SUBGRUPO].nunique()}'
+    )
 
     # 2. Iteração por CADA SUBGRUPO DE PROCEDIMENTO ENCONTRADO
     for subgrupo, df_subgrupo_filtrado in df_grouped_subgrupo:
 
-        print(f"📋 Processando subgrupo: {subgrupo}")
-        print(f"   - Registros filtrados: {len(df_subgrupo_filtrado)}")
+        print(f'📋 Processando subgrupo: {subgrupo}')
+        print(f'   - Registros filtrados: {len(df_subgrupo_filtrado)}')
 
         # Cria a base de agregação para este subgrupo
         df_base_agregacao = df_subgrupo_filtrado.copy()
 
         tabela = []
-        tabela.append(['NIVEL', 'DESCRIÇÃO', 'QUANTIDADE APROVADA', 'VALOR APROVADO (R$)'])
+        tabela.append(
+            [
+                'NIVEL',
+                'DESCRIÇÃO',
+                'QUANTIDADE APROVADA',
+                'VALOR APROVADO (R$)',
+            ]
+        )
 
         # --- NÍVEL NACIONAL (Sempre o primeiro) ---
         # Para o nacional, usa a base completa (df) deste subgrupo
@@ -901,18 +910,24 @@ def gerar_tabela_sia_oci(
         if nivel_selecionado == 'NACIONAL':
             # Para nível nacional, mostra todas as regiões com base completa
             df_reg_base = df[df[COL_SUBGRUPO] == subgrupo]
-            
+
             # 1. Agrega por Região (base completa)
             df_reg = (
-                df_reg_base.groupby('NO_REGIAO', observed=True)[['QUANT_APROV', 'VALOR_APROV']]
+                df_reg_base.groupby('NO_REGIAO', observed=True)[
+                    ['QUANT_APROV', 'VALOR_APROV']
+                ]
                 .sum()
                 .reset_index()
             )
 
             # 2. Itera a hierarquia (Região)
-            for regiao_padronizada in df_reg['NO_REGIAO'].sort_values().unique():
+            for regiao_padronizada in (
+                df_reg['NO_REGIAO'].sort_values().unique()
+            ):
 
-                df_regiao_linha = df_reg[df_reg['NO_REGIAO'] == regiao_padronizada]
+                df_regiao_linha = df_reg[
+                    df_reg['NO_REGIAO'] == regiao_padronizada
+                ]
                 if df_regiao_linha.empty:
                     continue
 
@@ -936,7 +951,9 @@ def gerar_tabela_sia_oci(
 
                 # Nível UF
                 df_uf = (
-                    df_base_regiao.groupby('NO_UF', observed=True)[['QUANT_APROV', 'VALOR_APROV']]
+                    df_base_regiao.groupby('NO_UF', observed=True)[
+                        ['QUANT_APROV', 'VALOR_APROV']
+                    ]
                     .sum()
                     .reset_index()
                 )
@@ -969,11 +986,13 @@ def gerar_tabela_sia_oci(
                 # Filtro por região específica
                 regiao_filtro = filtros['NO_REGIAO']
                 df_reg_filtrado = df[df[COL_SUBGRUPO] == subgrupo]
-                df_reg_filtrado = df_reg_filtrado[df_reg_filtrado['NO_REGIAO'] == regiao_filtro]
-                
+                df_reg_filtrado = df_reg_filtrado[
+                    df_reg_filtrado['NO_REGIAO'] == regiao_filtro
+                ]
+
                 quant_regiao = df_reg_filtrado['QUANT_APROV'].sum()
                 valor_regiao = df_reg_filtrado['VALOR_APROV'].sum()
-                
+
                 tabela.append(
                     [
                         NIVEL_FORMATADO['REGIAO'],
@@ -982,37 +1001,48 @@ def gerar_tabela_sia_oci(
                         formatar_valor_monetario(valor_regiao),
                     ]
                 )
-                
+
                 # Continua com a lógica normal para níveis abaixo usando base filtrada
-                df_base_regiao = df_base_agregacao[df_base_agregacao['NO_REGIAO'] == regiao_filtro]
-                
+                df_base_regiao = df_base_agregacao[
+                    df_base_agregacao['NO_REGIAO'] == regiao_filtro
+                ]
+
             else:
                 # Para outros filtros (UF, etc.), mostra apenas a região correspondente aos dados filtrados
                 df_reg_filtrado = df_base_agregacao
                 regioes_afetadas = df_reg_filtrado['NO_REGIAO'].unique()
-                
+
                 for regiao_padronizada in regioes_afetadas:
                     # Para mostrar o total REAL da região, usa base completa
-                    df_regiao_completa = df[(df[COL_SUBGRUPO] == subgrupo) & (df['NO_REGIAO'] == regiao_padronizada)]
+                    df_regiao_completa = df[
+                        (df[COL_SUBGRUPO] == subgrupo)
+                        & (df['NO_REGIAO'] == regiao_padronizada)
+                    ]
                     quant_regiao_real = df_regiao_completa['QUANT_APROV'].sum()
                     valor_regiao_real = df_regiao_completa['VALOR_APROV'].sum()
-                    
+
                     tabela.append(
                         [
                             NIVEL_FORMATADO['REGIAO'],
                             get_descricao(regiao_padronizada),
-                            formatar_populacao(quant_regiao_real),  # Total real da região
+                            formatar_populacao(
+                                quant_regiao_real
+                            ),  # Total real da região
                             formatar_valor_monetario(valor_regiao_real),
                         ]
                     )
-                    
-                    df_base_regiao = df_base_agregacao[df_base_agregacao['NO_REGIAO'] == regiao_padronizada]
+
+                    df_base_regiao = df_base_agregacao[
+                        df_base_agregacao['NO_REGIAO'] == regiao_padronizada
+                    ]
 
             # Continuação da hierarquia para níveis abaixo de REGIÃO
             if 'df_base_regiao' in locals() and not df_base_regiao.empty:
                 # Nível UF
                 df_uf = (
-                    df_base_regiao.groupby('NO_UF', observed=True)[['QUANT_APROV', 'VALOR_APROV']]
+                    df_base_regiao.groupby('NO_UF', observed=True)[
+                        ['QUANT_APROV', 'VALOR_APROV']
+                    ]
                     .sum()
                     .reset_index()
                 )
@@ -1054,11 +1084,14 @@ def gerar_tabela_sia_oci(
                             .reset_index()
                         )
                         for macro_padronizada in (
-                            df_macro['NO_MACRO_REG_SAUDE'].sort_values().unique()
+                            df_macro['NO_MACRO_REG_SAUDE']
+                            .sort_values()
+                            .unique()
                         ):
 
                             df_macro_linha = df_macro[
-                                df_macro['NO_MACRO_REG_SAUDE'] == macro_padronizada
+                                df_macro['NO_MACRO_REG_SAUDE']
+                                == macro_padronizada
                             ]
                             if df_macro_linha.empty:
                                 continue
@@ -1096,17 +1129,24 @@ def gerar_tabela_sia_oci(
                                     .reset_index()
                                 )
                                 for rs_padronizada in (
-                                    df_rs['NO_REGIAO_SAUDE'].sort_values().unique()
+                                    df_rs['NO_REGIAO_SAUDE']
+                                    .sort_values()
+                                    .unique()
                                 ):
 
                                     df_rs_linha = df_rs[
-                                        df_rs['NO_REGIAO_SAUDE'] == rs_padronizada
+                                        df_rs['NO_REGIAO_SAUDE']
+                                        == rs_padronizada
                                     ]
                                     if df_rs_linha.empty:
                                         continue
 
-                                    quant_rs = df_rs_linha['QUANT_APROV'].iloc[0]
-                                    valor_rs = df_rs_linha['VALOR_APROV'].iloc[0]
+                                    quant_rs = df_rs_linha['QUANT_APROV'].iloc[
+                                        0
+                                    ]
+                                    valor_rs = df_rs_linha['VALOR_APROV'].iloc[
+                                        0
+                                    ]
 
                                     # Adiciona a Linha da REGIÃO DE SAÚDE
                                     tabela.append(
@@ -1153,16 +1193,28 @@ def gerar_tabela_sia_oci(
                                             if df_mun_linha.empty:
                                                 continue
 
-                                            quant_mun = df_mun_linha['QUANT_APROV'].iloc[0]
-                                            valor_mun = df_mun_linha['VALOR_APROV'].iloc[0]
+                                            quant_mun = df_mun_linha[
+                                                'QUANT_APROV'
+                                            ].iloc[0]
+                                            valor_mun = df_mun_linha[
+                                                'VALOR_APROV'
+                                            ].iloc[0]
 
                                             # Adiciona a Linha do MUNICÍPIO
                                             tabela.append(
                                                 [
-                                                    NIVEL_FORMATADO['MUNICÍPIO'],
-                                                    get_descricao(mun_padronizado),
-                                                    formatar_populacao(quant_mun),
-                                                    formatar_valor_monetario(valor_mun),
+                                                    NIVEL_FORMATADO[
+                                                        'MUNICÍPIO'
+                                                    ],
+                                                    get_descricao(
+                                                        mun_padronizado
+                                                    ),
+                                                    formatar_populacao(
+                                                        quant_mun
+                                                    ),
+                                                    formatar_valor_monetario(
+                                                        valor_mun
+                                                    ),
                                                 ]
                                             )
 
@@ -1179,9 +1231,17 @@ def gerar_tabela_sia_oci(
                                                 ]
                                                 df_cnes = (
                                                     df_base_mun.groupby(
-                                                        ['CO_CNES', 'NO_FANTASIA'],
+                                                        [
+                                                            'CO_CNES',
+                                                            'NO_FANTASIA',
+                                                        ],
                                                         observed=True,
-                                                    )[['QUANT_APROV', 'VALOR_APROV']]
+                                                    )[
+                                                        [
+                                                            'QUANT_APROV',
+                                                            'VALOR_APROV',
+                                                        ]
+                                                    ]
                                                     .sum()
                                                     .reset_index()
                                                 )
@@ -1193,8 +1253,12 @@ def gerar_tabela_sia_oci(
                                                     nome_fantasia = row_cnes[
                                                         'NO_FANTASIA'
                                                     ]
-                                                    quant_cnes = row_cnes['QUANT_APROV']
-                                                    valor_cnes = row_cnes['VALOR_APROV']
+                                                    quant_cnes = row_cnes[
+                                                        'QUANT_APROV'
+                                                    ]
+                                                    valor_cnes = row_cnes[
+                                                        'VALOR_APROV'
+                                                    ]
 
                                                     # Adiciona a Linha da UNIDADE (CNES)
                                                     descricao_unidade = (
@@ -1219,8 +1283,12 @@ def gerar_tabela_sia_oci(
 
         # 3. ADICIONA TABELA NA LISTA DE RESULTADOS
         if len(tabela) > 2:  # Verifica se tem mais que cabeçalho + nacional
-            tabelas.append({'subgrupo_procedimento': subgrupo, 'dados': tabela})
-            print(f"✅ Tabela gerada para subgrupo {subgrupo}: {len(tabela)} linhas")
+            tabelas.append(
+                {'subgrupo_procedimento': subgrupo, 'dados': tabela}
+            )
+            print(
+                f'✅ Tabela gerada para subgrupo {subgrupo}: {len(tabela)} linhas'
+            )
 
-    print(f"✅ Total de tabelas OCI geradas: {len(tabelas)}")
+    print(f'✅ Total de tabelas OCI geradas: {len(tabelas)}')
     return tabelas

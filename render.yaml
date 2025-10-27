@@ -1,10 +1,12 @@
 services:
   - type: web
-    name: bot-briefing-deeqae
+    name: briefing-deeqae
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    startCommand: gunicorn app:app --workers=1 --worker-class=gevent --worker-connections=1000 --timeout=120 --max-requests=100 --max-requests-jitter=20
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.10
+      - key: PYTHONUNBUFFERED
+        value: true
+      - key: GUNICORN_CMD_ARGS
+        value: "--preload"

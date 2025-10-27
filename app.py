@@ -6,7 +6,6 @@ import sys
 from flask import (Flask, jsonify, redirect, render_template, request,
                    send_file, send_from_directory, url_for)
 
-
 # Configurações para produção
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-123')
@@ -328,7 +327,6 @@ def not_found(error):
 @app.errorhandler(500)
 def internal_error(error):
     return jsonify({'error': 'Erro interno do servidor'}), 500
-
 
 
 if __name__ == '__main__':
