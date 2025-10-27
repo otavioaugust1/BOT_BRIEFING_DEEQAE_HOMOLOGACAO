@@ -382,29 +382,47 @@ function gerarZipSimplificado() {
 }
 
 function animateProgressBar() {
+  // Retorna uma Promise para saber quando a animação terminou
   return new Promise((resolve) => {
     const fill = document.getElementById("progressFill");
-    let progress = 0;
-    const duration = 25000; // 15 segundos EXATOS
-    const interval = 100;
-    const step = 100 / (duration / interval);
+    
+    // Configuração da duração
+    const DURATION_MS = 45000; // 45 segundos exatos
+    const INTERVAL_MS = 100;   // Intervalo de atualização (10x por segundo)
+    
+    // Armazena o tempo de início para um cálculo preciso
+    const startTime = Date.now(); 
 
     // RESETA a barra para 0%
     fill.style.width = '0%';
     fill.textContent = '0%';
 
     const timer = setInterval(() => {
-      progress += step;
+      // 1. Calcula o tempo real decorrido
+      const elapsedTime = Date.now() - startTime;
+      
+      // 2. Calcula o progresso exato baseado no tempo
+      let progress = (elapsedTime / DURATION_MS) * 100;
+
       if (progress >= 100) {
+        // Garantir que termina em 100%
         progress = 100;
+        
+        // Parar o timer
         clearInterval(timer);
+        
+        // Atualizar a exibição final
         fill.style.width = `${progress}%`;
         fill.textContent = `${Math.round(progress)}%`;
+        
+        // Resolver a Promise
         resolve();
+      } else {
+        // Atualiza a exibição durante a animação
+        fill.style.width = `${progress}%`;
+        fill.textContent = `${Math.round(progress)}%`;
       }
-      fill.style.width = `${progress}%`;
-      fill.textContent = `${Math.round(progress)}%`;
-    }, interval);
+    }, INTERVAL_MS);
   });
 }
 
