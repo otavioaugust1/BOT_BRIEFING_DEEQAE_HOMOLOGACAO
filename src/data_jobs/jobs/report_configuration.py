@@ -303,6 +303,28 @@ def verificar_arquivo_existente(dados_selecao, tipo):
     return None, nome_arquivo
 
 
+# ---- VERIFICAR GOVERNADOR NA BASE ----
+def carregar_governadores():
+    """Carrega dados dos governadores do arquivo Parquet"""
+    try:
+        governadores_path = os.path.join(
+            BASE_DIR,
+            '..',
+            '..',
+            '..',
+            'db',
+            'prefeitos',
+            'governadores_2022_BRASIL.parquet',
+        )
+        df_governadores = pd.read_parquet(governadores_path)
+        return df_governadores
+    except Exception as e:
+        print(
+            f'⚠️ Aviso: Não foi possível carregar dados dos governadores: {e}'
+        )
+        return pd.DataFrame()
+
+
 # ---- VERIFICAR PREFEITOS NA BASE ----
 def carregar_prefeitos():
     """Carrega dados dos prefeitos do arquivo Parquet"""
@@ -343,6 +365,46 @@ def carregar_secretarios():
             f'⚠️ Aviso: Não foi possível carregar dados dos secretários: {e}'
         )
         return pd.DataFrame()
+
+
+# --- CARREGAMENTO DO NOME DO GOVERNADOR NO RELATORIO ----
+def gerar_nome_governador(uf):
+    """Gera informações do governador baseado na UF"""
+    if uf == 'TODOS':
+        return 'Informação não disponível para seleção ampla'
+
+    df_governadores = carregar_governadores()
+    if df_governadores.empty:
+        return 'Dados de governadores não disponíveis'
+
+    # 1. NORMALIZAÇÃO DA UF
+    uf_sigla = extrair_codigo_uf(uf)  # Ex: 'São Paulo' -> 'SP'
+
+    # 2. Garantir que a coluna SG_UF está em maiúsculas
+    df_governadores['SG_UF_UPPER'] = (
+        df_governadores['SG_UF'].astype(str).str.upper()
+    )
+
+    # 3. Filtragem
+    resultado = df_governadores[df_governadores['SG_UF_UPPER'] == uf_sigla]
+
+    if not resultado.empty:
+        governador = resultado.iloc[0]
+        nome = governador.get('NM_URNA_CANDIDATO', 'N/A')
+        partido = governador.get('SG_PARTIDO', 'N/A')
+        coligacao = governador.get('NM_COLIGACAO', 'N/A')
+        composicao = governador.get('DS_COMPOSICAO_COLIGACAO', 'N/A')
+
+        info_governador = f'{nome} - ({partido})'
+        if coligacao and coligacao != 'N/A':
+            info_governador += f'\nColigação: {coligacao}'
+        if composicao and composicao != 'N/A':
+            info_governador += f'\nComposição: {composicao}'
+
+        return info_governador
+    else:
+        print(f"DEBUG: Falha na busca por UF='{uf_sigla}'")
+        return f'Governador não encontrado para {uf}'
 
 
 # --- CARREGAMENTO DO NOME DO PREFEITO NO RELATORIO ----
